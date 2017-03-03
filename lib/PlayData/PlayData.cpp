@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <PlayData.h>
-#include "SD.h"
-#include "SPI.h"
+#include <SD.h>
+#include <SPI.h>
 
 #define CSpin 10
 const char *PNAMES = {"names.txt"};
@@ -38,4 +38,8 @@ PlayData::PlayData(int p1, int p2, int c1, int c2){
      myFile.close();
      Serial.println("...done!");
    }
+   for(int i = 0;i < 90; i++){
+     Serial.print(playerNames[i]);
+   }
+   Serial.println();
 }
