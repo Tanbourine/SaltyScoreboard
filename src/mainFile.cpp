@@ -3,19 +3,20 @@
 #include <TimerThing.h>
 #include <SD.h>
 #include <SPI.h>
+#include <string.h>
 
 #define CS_PIN 10
 //Declare objects and variables
-int a;
 int P1 = 1;
 int P2 = 2;
 int C1 = 4;
 int C2 = 6;
 const char *PNAMES = {"names.txt"};
 const char *CNAMES = {"chars.txt"};
-char inRead[91]; //Create container for names
-//char *playerNames[] = {"asdfjkl;asdfjkl;asdfjkl;asdfjkl;asdfjkl;asdfjkl;asdfjkl;asdfjkl;asdfjkl;asdfjkl;0"};
-//char playerNames[91];
+char playerNames[91];
+//char *playerNames[91]; //Create container for player names
+char charNames[157]; //Create container for character names
+
 TimerThing timer;
 File myFile;
 
@@ -47,30 +48,48 @@ void setup(){
   Serial.println("...Initialization done.");
 
 
-    myFile = SD.open(PNAMES, FILE_READ);  //PNAMES defined above for ease change
-    if (myFile){
-      Serial.print("Reading names.txt...");
+  //Retrieve Player Names
+  myFile = SD.open(PNAMES, FILE_READ);  //PNAMES defined above for ease change
+  if (myFile){
+    Serial.print("Reading names.txt...");
     //  while (myFile.available() > 0){
-      for (unsigned int i = 0; i < myFile.size();i++){
-        inRead[i] = char(myFile.read());
-        if (inRead[i] == '\n'){
-          inRead[i] = '0'; //add null termination for char array
-          for(unsigned int j = 0;j < i; j++){
-            Serial.print(inRead[j]);
-            //*playerNames[j] = inRead[j];
+    for (unsigned int i = 0; i < myFile.size();i++){
+      playerNames[i] = char(myFile.read());
+      //Serial.println(playerNames[i]);
+      if (playerNames[i] == '0'){
+        if (char(myFile.read()) == '0'){
+          if (char(myFile.read()) == '0'){
+            for(unsigned int j = 0;j < i; j++){
+              Serial.print(playerNames[j]);
+            }
+            break;
           }
-          break;
         }
       }
+    }
+   }
+   myFile.close();
+   Serial.println("...done!");
+   //finished retrieving player names
+
+   //Retrieve Character names
+   myFile = SD.open(CNAMES, FILE_READ);  //PNAMES defined above for ease change
+   if (myFile){
+     Serial.print("Reading chars.txt...");
+
+     for (unsigned int i = 0; i < myFile.size();i++){
+       charNames[i] = char(myFile.read());
+       Serial.print(charNames[i]);
      }
-     myFile.close();
-     Serial.println("...done!");
+    }
+    myFile.close();
+    Serial.println("...done!");
+    //Finished retrieving char names
    }
 
 
   //Show Loading Screen with Version # for debug purposes
 
-  //Retrieve Character and Name Index and save into local memory
 
   //Display Singles Screen
 
@@ -84,17 +103,6 @@ void setup(){
 
 void loop(){
   //AKA Main()
-
-//if statements to check button preses
-for(int i = 0;i < 90; i++){
-  if (inRead[i] == '0'){
-    Serial.println();
-    break; 
-  }
-  Serial.print(inRead[i]);
-}
-//Serial.println();
-delay(2000);
 
 
 //if singlesScreen >>
