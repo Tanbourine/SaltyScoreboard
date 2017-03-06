@@ -8,8 +8,9 @@
 class TimerThing{
 public:
   TimerThing();
-  void start();
-  void stop();
+  unsigned long start();
+  unsigned long lap();
+  unsigned long stop();
 };
 
 #endif
