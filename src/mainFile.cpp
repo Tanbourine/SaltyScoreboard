@@ -22,11 +22,10 @@ int P1 = 1;
 int P2 = 2;
 int C1 = 4;
 int C2 = 6;
-int delayTime = 5000;
+int delayTime = 2000;
 const char *PNAMES = {"names.txt"};
 const char *CNAMES = {"chars.txt"};
 char playerNames[91];
-//char *playerNames[91]; //Create container for player names
 char charNames[157]; //Create container for character names
 
 TimerThing timer;
@@ -43,7 +42,6 @@ void printString(char *str){
     p++;
   }
 }
-
 
 
 void setup(){
@@ -101,7 +99,7 @@ void setup(){
   }
   myFile.close();
   Serial.println("...done!");
-  lcd.setCursor(0,2);
+  lcd.setCursor(12,1);
   lcd.print("...done!");
   unsigned long t_lap2 = timer.lap();
   lcd.setCursor(0,3);
@@ -120,7 +118,6 @@ void setup(){
     lcd.print("Reading...");
     lcd.setCursor(0,1);
     lcd.print("chars.txt...");
-    lcd.setCursor(0,2);
      for (unsigned int i = 0; i < myFile.size();i++){
        charNames[i] = char(myFile.read());
        //Serial.print(charNames[i]);
@@ -128,18 +125,67 @@ void setup(){
     }
     myFile.close();
     Serial.println("...done!");
+    lcd.setCursor(12,1);
     lcd.print("...done!");
     unsigned long t_lap3 = timer.lap();
     lcd.setCursor(0,3);
     lcd.print(t_lap3-2*delayTime);
     lcd.print(" mils");
     delay(delayTime);
-    //lcd.clear();
     //Finished retrieving char names
 
     //Version Screen
+    byte customChar[8] = {
+    	0b11111,
+    	0b11111,
+    	0b11111,
+    	0b11111,
+    	0b11111,
+    	0b11111,
+    	0b11111,
+    	0b11111
+    };
+    lcd.createChar(0,customChar);
+    lcd.clear();
+    for (int i = 0;i < 4;i++){
+      for (int j = 0;j < 20;j++){
+        lcd.setCursor(j,i);
+        lcd.write((uint8_t) 0);
+      }
+    }
 
+    //VERSION SCREEN
+    lcd.setCursor(2,1);
+    lcd.print("SALTY SCOREBOARD");
+    lcd.setCursor(5,2);
+    lcd.print("VER 0.01");
+    delay(delayTime);
 
+    //Singles Select Screen
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("PLAYER 1");
+    lcd.setCursor(12,0);
+    lcd.print("PLAYER 2");
+    lcd.setCursor(0,2);
+    lcd.print("CHAR     vs     CHAR");
+    lcd.setCursor(0,3);
+    lcd.print("WINS= 000  000 =WINS");
+    unsigned long t_end = timer.stop();
+    delay(3000);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Initialize >> ");
+    lcd.print(t_lap1);
+    lcd.setCursor(0,1);
+    lcd.print("Player Names >> ");
+    lcd.print(t_lap2-delayTime);
+    lcd.setCursor(0,2);
+    lcd.print("Char Names >> ");
+    lcd.print(t_lap3-2*delayTime);
+    lcd.setCursor(0,3);
+    lcd.print("Show Singles >> ");
+    lcd.print(t_end-4*delayTime);
 
   } //end of setup
 
